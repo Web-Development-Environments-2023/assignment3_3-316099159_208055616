@@ -5,6 +5,8 @@ import axios from "axios";
 
 import routes from "./routes";
 import VueRouter from "vue-router";
+import store from "./store";
+
 Vue.use(VueRouter);
 const router = new VueRouter({
   routes,
@@ -67,7 +69,8 @@ Vue.use(VueAxios, axios);
 Vue.config.productionTip = false;
 
 const shared_data = {
-  username: localStorage.username,
+  ...store,
+  username: localStorage.getItem("username"),
   login(username) {
     localStorage.setItem("username", username);
     this.username = username;
@@ -80,7 +83,10 @@ const shared_data = {
   },
 };
 console.log(shared_data);
-// Vue.prototype.$root.store = shared_data;
+
+if(Vue.prototype.$root !== undefined) {
+  Vue.prototype.$root.store = shared_data;
+} 
 
 new Vue({
   router,

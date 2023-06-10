@@ -3,7 +3,6 @@
     <div id="nav">
       <router-link :to="{ name: 'main' }">Vue Recipes</router-link>|
       <router-link :to="{ name: 'search' }">Search</router-link>|
-      {{ !$root.store.username }}
       <span v-if="!$root.store.username">
         Guest:
         <router-link :to="{ name: 'register' }">Register</router-link>|
@@ -21,10 +20,20 @@
 export default {
   name: "App",
   methods: {
-    Logout() {
+    async Logout() {
       this.$root.store.logout();
-      this.$root.toast("Logout", "User logged out successfully", "success");
-
+      try {
+        const response = await this.axios.post(
+          this.$root.store.server_domain + "/Logout",
+          { withCredentials: true }
+        );
+        console.log(response);
+        this.$root.store.logout();
+        this.$root.toast("Logout", "User logged out successfully", "success");
+      } catch (err) {
+        console.log(err.response);        
+        this.$root.toast("Logout", err.response.data.message, "fail");
+      }
       this.$router.push("/").catch(() => {
         this.$forceUpdate();
       });

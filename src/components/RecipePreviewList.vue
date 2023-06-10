@@ -23,6 +23,20 @@ export default {
     title: {
       type: String,
       required: true
+    },
+    isLastViewedRecipes: {
+      type: Boolean,
+      required: false,
+      default() {
+        return false;
+      }
+    },
+    isRandomRecipes: {
+      type: Boolean,
+      required: false,
+      default() {
+        return false;
+      }
     }
   },
   data() {
@@ -36,16 +50,28 @@ export default {
   methods: {
     async updateRecipes() {
       try {
-        const response = await this.axios.get(
-          this.$root.store.server_domain + "/recipes/random",
-          // "https://test-for-3-2.herokuapp.com/recipes/random"
-        );
-
-        // console.log(response);
-        const recipes = response.data.recipes;
+        let response;
+        if (this.$props.isRandomRecipes){
+          response = await this.axios.get(
+            this.$root.store.server_domain + "/recipes/random",
+            // "https://test-for-3-2.herokuapp.com/recipes/random"
+            { withCredentials: true }
+          );
+        }
+        else if (this.$props.isLastViewedRecipes){
+          response = await this.axios.get(
+            this.$root.store.server_domain + "/users/lastWatched",
+            // "https://test-for-3-2.herokuapp.com/recipes/random"
+            { withCredentials: true }
+          );
+        }
+        else {
+          return;
+        }
+        console.log(response);
+        const recipes = response.data;
         this.recipes = [];
         this.recipes.push(...recipes);
-        // console.log(this.recipes);
       } catch (error) {
         console.log(error);
       }
