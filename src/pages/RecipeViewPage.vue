@@ -1,59 +1,29 @@
 <template>
   <div class="container">
     <div v-if="recipe">
-      <div class="recipe-header mt-3 mb-4">
-        <h1>{{ recipe.title }}</h1>
-        <img :src="recipe.image" class="center" />
-      </div>
-      <div class="recipe-body">
-        <div class="wrapper">
-          <div class="wrapped">
-            <div class="mb-3">
-              <div>Ready in {{ recipe.readyInMinutes }} minutes</div>
-              <div>Likes: {{ recipe.popularity }} likes</div>
-            </div>
-            Ingredients:
-            <ul>
-              <li
-                v-for="(r, index) in recipe.extendedIngredients"
-                :key="index + '_' + r.id"
-              >
-                {{ r.original }}
-              </li>
-            </ul>
-          </div>
-          <div class="wrapped">
-            Instructions:
-            <ol>
-              <li v-for="s in recipe._instructions" :key="s.number">
-                {{ s.step }}
-              </li>
-            </ol>
-          </div>
-        </div>
-      </div>
-      <!-- <pre>
-      {{ $route.params }}
-      {{ recipe }}
-    </pre
-      > -->
+      <RecipeFull :key="recipe.id" :recipe="recipe"></RecipeFull>
     </div>
   </div>
 </template>
 
 <script>
+import RecipeFull from "../components/RecipeFull.vue";
 export default {
+  name: "RecipeViewPage",
+  components: {
+    RecipeFull
+  },
   data() {
     return {
       recipe: null
     };
   },
-  async created() {
+  async mounted() {
     try {
+      // getting the recipe from the server
       let response;
       try {
         response = await this.axios.get(
-          // "https://test-for-3-2.herokuapp.com/recipes/info",
           this.$root.store.server_domain + `/recipes/${this.$route.params.recipeId}`,
           { withCredentials: true }
         );
@@ -63,38 +33,48 @@ export default {
         this.$router.replace("/NotFound");
         return;
       }
+
+      // mapping the response to the recipe object
       console.log("response.data", response.data);
-      let {
-        // analyzedInstructions,
-        // instructions,
-        // extendedIngredients,
-        popularity,
+      const {
+        id,
+        title,
         readyInMinutes,
         image,
-        title
+        popularity,
+        vegan,
+        vegetarian,
+        glutenFree,
+        extendedIngredients,
+        analyzedInstructions,
+        instructions,
+        servings
       } = response.data;
 
-      const analyzedInstructions = ["need to add analyzedInstructions"]
-      const instructions = ["need to add instructions"]
-      const extendedIngredients = ["need to add extendedIngredients"]
-      const _instructions = instructions
-
-      // let _instructions = analyzedInstructions
-      //   .map((fstep) => {
-      //     fstep.steps[0].step = fstep.name + fstep.steps[0].step;
-      //     return fstep.steps;
-      //   })
-      //   .reduce((a, b) => [...a, ...b], []);
+      let _instructions = undefined;
+      if (analyzedInstructions) {
+        _instructions = analyzedInstructions
+          .map((fstep) => {
+            fstep.steps[0].step = fstep.name + fstep.steps[0].step;
+            return fstep.steps;
+          })
+          .reduce((a, b) => [...a, ...b], []);
+      }
 
       let _recipe = {
-        instructions,
-        _instructions,
-        analyzedInstructions,
-        extendedIngredients,
-        popularity,
+        id,
+        title,
         readyInMinutes,
         image,
-        title
+        popularity,
+        vegan,
+        vegetarian,
+        glutenFree,
+        extendedIngredients,
+        analyzedInstructions,
+        instructions,
+        servings,
+        _instructions
       };
 
       this.recipe = _recipe;
@@ -105,21 +85,3 @@ export default {
   }
 };
 </script>
-
-<style scoped>
-.wrapper {
-  display: flex;
-}
-.wrapped {
-  width: 50%;
-}
-.center {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 50%;
-}
-/* .recipe-header{
-
-} */
-</style>

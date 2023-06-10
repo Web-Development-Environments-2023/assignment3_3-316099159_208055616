@@ -41,24 +41,26 @@ export default {
   },
   data() {
     return {
-      recipes: []
+      recipes: [],
+      isUpdated: false
     };
   },
   mounted() {
-    this.updateRecipes();
+    if (!this.isUpdated)
+      this.updateRecipes();
   },
   methods: {
     async updateRecipes() {
       try {
         let response;
-        if (this.$props.isRandomRecipes){
+        if (this.$props.isRandomRecipes) {
           response = await this.axios.get(
             this.$root.store.server_domain + "/recipes/random",
             // "https://test-for-3-2.herokuapp.com/recipes/random"
             { withCredentials: true }
           );
         }
-        else if (this.$props.isLastViewedRecipes){
+        else if (this.$props.isLastViewedRecipes) {
           response = await this.axios.get(
             this.$root.store.server_domain + "/users/lastWatched",
             // "https://test-for-3-2.herokuapp.com/recipes/random"
@@ -70,8 +72,8 @@ export default {
         }
         console.log(response);
         const recipes = response.data;
-        this.recipes = [];
         this.recipes.push(...recipes);
+        this.isUpdated = true;
       } catch (error) {
         console.log(error);
       }

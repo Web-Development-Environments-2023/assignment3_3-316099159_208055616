@@ -12,7 +12,9 @@
         {{ $root.store.username }}: <button @click="Logout">Logout</button>|
       </span>
     </div>
-    <router-view />
+    <keep-alive exclude="/recipe">
+      <router-view />
+    </keep-alive>
   </div>
 </template>
 
@@ -21,8 +23,8 @@ export default {
   name: "App",
   methods: {
     async Logout() {
-      this.$root.store.logout();
       try {
+        this.$root.store.logout();
         const response = await this.axios.post(
           this.$root.store.server_domain + "/Logout",
           { withCredentials: true }
@@ -31,7 +33,7 @@ export default {
         this.$root.store.logout();
         this.$root.toast("Logout", "User logged out successfully", "success");
       } catch (err) {
-        console.log(err.response);        
+        console.log(err.response);
         this.$root.toast("Logout", err.response.data.message, "fail");
       }
       this.$router.push("/").catch(() => {
