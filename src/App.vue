@@ -12,7 +12,7 @@
         {{ $root.store.username }}: <button @click="Logout">Logout</button>|
       </span>
     </div>
-    <keep-alive exclude="/recipe">
+    <keep-alive exclude="RecipeViewPage">
       <router-view />
     </keep-alive>
   </div>

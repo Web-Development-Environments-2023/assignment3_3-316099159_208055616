@@ -1,8 +1,5 @@
 <template>
-  <router-link
-    :to="{ name: 'recipe', params: { recipeId: recipe.id } }"
-    class="recipe-preview"
-  >
+  <router-link :to="{ name: 'recipe', params: { recipeId: recipe.id } }" class="recipe-preview">
     <div class="recipe-body">
       <img v-if="image_load" :src="recipe.image" class="recipe-image" />
     </div>
@@ -14,6 +11,17 @@
         <li>{{ recipe.readyInMinutes }} minutes</li>
         <li>{{ recipe.popularity }} likes</li>
       </ul>
+      <div v-if="recipe.vegetarian">
+        <i class="fas fa-leaf"></i> <!-- Font Awesome leaf icon -->
+      </div>
+
+      <div v-if="recipe.vegan">
+        <i class="fas fa-seedling"></i> <!-- Font Awesome seedling icon -->
+      </div>
+
+      <div v-if="recipe.glutenFree">
+        <i class="fas fa-bread-slice"></i> <!-- Font Awesome bread-slice icon -->
+      </div>
     </div>
   </router-link>
 </template>
@@ -47,7 +55,8 @@ export default {
   position: relative;
   margin: 10px 10px;
 }
-.recipe-preview > .recipe-body {
+
+.recipe-preview>.recipe-body {
   width: 100%;
   height: 200px;
   position: relative;
