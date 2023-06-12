@@ -1,20 +1,28 @@
+import "bootstrap/dist/css/bootstrap.css";
+import "bootstrap-vue/dist/bootstrap-vue.css";
+
 import Vue from "vue";
+import Vuex from 'vuex';
 import App from "./App.vue";
 import VueAxios from "vue-axios";
 import axios from "axios";
-
+import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import routes from "./routes";
 import VueRouter from "vue-router";
-import store from "./store";
+import store from './store';
+import * as apiCalls from "./api_calls";
 
 Vue.use(VueRouter);
 const router = new VueRouter({
   routes,
 });
 
+// Make BootstrapVue available throughout your project
+Vue.use(BootstrapVue)
+// Optionally install the BootstrapVue icon components plugin
+Vue.use(IconsPlugin)
+
 import Vuelidate from "vuelidate";
-import "bootstrap/dist/css/bootstrap.css";
-import "bootstrap-vue/dist/bootstrap-vue.css";
 import {
   FormGroupPlugin,
   FormPlugin,
@@ -70,17 +78,10 @@ Vue.config.productionTip = false;
 
 const shared_data = {
   ...store,
-  username: localStorage.getItem("username"),
-  login(username) {
-    localStorage.setItem("username", username);
-    this.username = username;
-    console.log("login", this.username);
-  },
-  logout() {
-    console.log("logout");
-    localStorage.removeItem("username");
-    this.username = undefined;
-  },
+  apiLogin: apiCalls.apiLogin,
+  apiLogout: apiCalls.apiLogout,
+  apiGetRandomRecipes: apiCalls.apiGetRandomRecipes,
+  apiGetLastWatched: apiCalls.apiGetLastWatched
 };
 console.log(shared_data);
 
@@ -89,6 +90,7 @@ if(Vue.prototype.$root !== undefined) {
 } 
 
 new Vue({
+  store,
   router,
   data() {
     return {

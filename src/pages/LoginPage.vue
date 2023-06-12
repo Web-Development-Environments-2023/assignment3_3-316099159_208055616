@@ -61,35 +61,25 @@ export default {
       const { $dirty, $error } = this.$v.form[param];
       return $dirty ? !$error : null;
     },
-    async Login() {
-      try {
-        const response = await this.axios.post(
-          // "https://test-for-3-2.herokuapp.com/user/Login",
-          this.$root.store.server_domain + "/Login",
-          // "http://132.72.65.211:80/Login",
-          // "http://132.73.84.100:80/Login",
-          {
-            username: this.form.username,
-            password: this.form.password,
-          },
-          { withCredentials: true }
-        );
-        this.$root.loggedIn = true;
-        this.$root.store.login(this.form.username);
-        this.$router.push("/");
-      } catch (err) {
-        this.form.submitError = err.response.data.message;
-      }
-    },
-    onLogin() {
-      console.log("login method called");
+    async onLogin() {
       this.form.submitError = undefined;
       this.$v.form.$touch();
       if (this.$v.form.$anyError) {
         return;
       }
-      console.log("login method started");
-      this.Login();
+      const { username, password } = this.form;
+      const response = await this.$store.dispatch("login", { username, password });
+      console.log(response);
+      if (!response) {
+        return;
+      }
+      if (response.status !== 200) {
+        console.log(response);
+        this.form.submitError = response.data.message;
+        return;
+      }
+      this.$router.push("/");
+      this.$store.dispatch("updateLastWatchedRecipes");
     }
   }
 };

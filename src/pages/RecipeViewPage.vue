@@ -9,6 +9,7 @@
 
 <script>
 import RecipeFull from "../components/RecipeFull.vue";
+import * as apiCalls from "../api_calls.js";
 export default {
   name: "RecipeViewPage",
   components: {
@@ -20,62 +21,31 @@ export default {
     };
   },
   methods: {
-    async getRecipeById(recipe_id) {
-      try {
-        const response = await this.axios.get(
-          this.$root.store.server_domain + `/recipes/${this.$route.params.recipeId}`,
-          { recipeId: recipe_id },
-          { withCredentials: true }
-        );
-        return response;
-      } catch (error) {
-        console.log(error);
-        this.$router.replace("/NotFound");
-        return;
+    async addToFavorites(recipeId) {
+      const response = await apiCalls.apiAddToFavorites(this.$route.params.recipeId);
+      if (response.status === 200) {
+        this.$root.toast("AddToFavorites", "Recipe added to favorites", "success");
       }
-    },
-    async addToFavorites(recipe_id) {
-      try {
-        const response = await this.axios.put(
-          this.$root.store.server_domain + `/users/favorites`,
-          { recipeId: recipe_id },
-          { withCredentials: true }
-        );
-        this.$root.toast("Add to favorites", "Recipe added to favorites", "success");
-        return response;
-      } catch (error) {
-        console.log(error);
-        this.$root.toast("Add to favorites", error.response.data.message, "fail")
-        return;
-      }
-    },
-    async addToLastWatched(recipe_id) {
-      try {
-        const response = await this.axios.put(
-          this.$root.store.server_domain + `/users/lastWatched`,
-          { recipeId: recipe_id },
-          { withCredentials: true }
-        );
-        this.$root.toast("Add to last watched", "Recipe added to last watched", "success");
-        return response;
-      } catch (error) {
-        console.log(error);
-        this.$root.toast("Add to last watched", error.response.data.message, "fail")
-        return;
+      else {
+        this.$root.toast("AddToFavorites", "Recipe not added to favorites", "fail");
       }
     }
   },
   async mounted() {
     // getting the recipe from the server
     const recipe_id = this.$route.params.recipeId
-    const response = await this.getRecipeById(recipe_id);
-    if (!response)
-      return;
-    if (response.status !== 200)
+    const response = await apiCalls.apiGetRecipeById(recipe_id)
+    if (response.status !== 200) {
       this.$router.replace("/NotFound");
-    console.log("response.data", response.data);
-
-    await this.addToLastWatched(parseInt(recipe_id));
+      return
+    }
+    const addResponse = await apiCalls.apiAddToLastWatched(parseInt(recipe_id));
+    if (addResponse.status === 200) {
+      this.$root.toast("AddToLastWatched", "Recipe added to last watched", "success");
+    }
+    else {
+      this.$root.toast("AddToLastWatched", "Recipe not added to last watched", "fail");
+    }
 
     // mapping the response to the recipe object
     const {
@@ -120,7 +90,6 @@ export default {
     };
 
     this.recipe = _recipe;
-    console.log("this.recipe", this.recipe);
   }
 };
 </script>

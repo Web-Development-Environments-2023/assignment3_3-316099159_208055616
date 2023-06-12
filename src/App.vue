@@ -1,17 +1,6 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link :to="{ name: 'main' }">Vue Recipes</router-link>|
-      <router-link :to="{ name: 'search' }">Search</router-link>|
-      <span v-if="!$root.store.username">
-        Guest:
-        <router-link :to="{ name: 'register' }">Register</router-link>|
-        <router-link :to="{ name: 'login' }">Login</router-link>|
-      </span>
-      <span v-else>
-        {{ $root.store.username }}: <button @click="Logout">Logout</button>|
-      </span>
-    </div>
+    <Navbar :logout="Logout"></Navbar>
     <keep-alive exclude="RecipeViewPage">
       <router-view />
     </keep-alive>
@@ -19,27 +8,29 @@
 </template>
 
 <script>
+import Navbar from "./components/Navbar.vue";
 export default {
   name: "App",
+  components: {
+    Navbar,
+  },
   methods: {
     async Logout() {
-      try {
-        this.$root.store.logout();
-        const response = await this.axios.post(
-          this.$root.store.server_domain + "/Logout",
-          { withCredentials: true }
-        );
-        console.log(response);
-        this.$root.store.logout();
+      const response = await this.$store.dispatch("logout");
+      if (!response) {
+        return;
+      }
+      else if (response.status !== 200) {
+        this.$root.toast("Logout", response.data.message, "fail");
+        return
+      }
+      else if (response.status === 200) {
         this.$root.toast("Logout", "User logged out successfully", "success");
-      } catch (err) {
-        console.log(err.response);
-        this.$root.toast("Logout", err.response.data.message, "fail");
       }
       this.$router.push("/").catch(() => {
         this.$forceUpdate();
       });
-    }
+    },
   }
 };
 </script>
@@ -53,18 +44,5 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
   min-height: 100vh;
-}
-
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
 }
 </style>

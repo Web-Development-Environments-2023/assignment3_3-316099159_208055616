@@ -3,28 +3,35 @@
     <h1 class="title">Main Page</h1>
     <RecipePreviewList title="Random Recipes" :class="{
       center: true
-    }" :isRandomRecipes="true">
+    }" :recipes="randomRecipes">
     </RecipePreviewList>
-    <router-link v-if="!$root.store.username" to="/login" tag="button">You need to Login to vue this</router-link>
+    <router-link v-if="!username" to="/login" tag="button">You need to Login to vue this</router-link>
     <RecipePreviewList title="Last Viewed Recipes" :class="{
-      blur: !$root.store.username,
+      blur: !username,
       center: true
-    }" :isLastViewedRecipes="true" disabled>
+    }" :recipes="lastWatchedRecipes">
     </RecipePreviewList>
-    <!-- <div
-      style="position: absolute;top: 70%;left: 50%;transform: translate(-50%, -50%);"
-    >
-      Centeredasdasdad
-    </div> -->
   </div>
 </template>
 
 <script>
 import RecipePreviewList from "../components/RecipePreviewList";
+import { mapState } from "vuex";
 export default {
+  name: "MainPage",
   components: {
     RecipePreviewList
-  }
+  },
+  computed: {
+    ...mapState({
+      username: state => state.username,
+      randomRecipes: state => state.randomRecipes,
+      lastWatchedRecipes: state => state.lastWatchedRecipes
+    }),
+  },
+  mounted() {
+    this.$store.dispatch("updateRandomRecipes");
+  },
 };
 </script>
 
