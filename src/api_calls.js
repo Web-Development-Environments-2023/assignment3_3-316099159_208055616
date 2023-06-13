@@ -1,15 +1,20 @@
 const server_domain = "http://localhost:3000"
 import axios from "axios";
 
-export async function apiLogout() {
-  let response;
+export async function apiRegister(username, first_name, last_name, country, password, email) {
   try {
-    response = await axios.post(
-    server_domain + "/Logout",
+    const response = await axios.post(
+    server_domain + "/Register",
+    {
+      username: username,
+      first_name: first_name,
+      last_name: last_name,
+      country: country,
+      password: password,
+      email: email,
+    },
     { withCredentials: true }
     );
-    console.log(response);
-    return response;
   } catch (err) {
     console.log(err);
     if (err.response) {
@@ -20,9 +25,8 @@ export async function apiLogout() {
 }
 
 export async function apiLogin(username, password) {
-  let response;
   try {
-    response = await axios.post(
+    const response = await axios.post(
     server_domain + "/Login",
     {
       username: username,
@@ -41,12 +45,11 @@ export async function apiLogin(username, password) {
   }
 }
 
-export async function apiGetRandomRecipes() {
-  let response;
+export async function apiLogout() {
   try {
-    response = await axios.get(
-      server_domain + "/recipes/random",
-      { withCredentials: true }
+    const response = await axios.post(
+    server_domain + "/Logout",
+    { withCredentials: true }
     );
     console.log(response);
     return response;
@@ -59,11 +62,117 @@ export async function apiGetRandomRecipes() {
   }
 }
 
-export async function apiGetLastWatched() {
-  let response;
+/*
+gets recipes of user according to attribute
+attribute can be: lastWatched, favorites, myRecipes
+*/
+export async function apiGenericGetUsersRecipes(attribute) {
+  let url = server_domain + "/users/";
+  if(attribute === "favorites") {
+    url += "favorites";
+  }
+  else if (attribute === "lastWatched") {
+    url += "lastWatched";
+  }
+  else if (attribute === "myRecipes") {
+    url += "myRecipes";
+  }
+  else {
+    console.log("apiGenericGetUsersRecipes: invalid attribute")
+    return
+  }
   try {
-    response = await axios.get(
-      server_domain + "/users/lastWatched",
+    const response = await axios.get(
+    url, 
+    { withCredentials: true }
+    );
+    console.log(response);
+    return response;
+  } catch (err) {
+    console.log(err);
+    if (err.response) {
+      return err.response;
+    }
+    return
+  }
+}
+
+/*
+adds recipe to user according to attribute
+attribute can be: lastWatched, favorites, myRecipes
+*/
+export async function apiGenericAddToUseresRecipes(attribute, recipe_id) {
+  let url = server_domain + "/users/";
+  if(attribute === "favorites") {
+    url += "favorites";
+  }
+  else if (attribute === "lastWatched") {
+    url += "lastWatched";
+  }
+  else if (attribute === "myRecipes") {
+    url += "myRecipes";
+  }
+  else {
+    console.log("apiGenericAddToUsersRecipes: invalid attribute")
+    return
+  }
+  try {
+    const response = await axios.put(
+    url, 
+    { recipeId: recipe_id }, 
+    { withCredentials: true }
+    );
+    console.log(response);
+    return response;
+  } catch (err) {
+    console.log(err);
+    if (err.response) {
+      return err.response;
+    }
+    return
+  }
+}
+
+export async function apiGetSearchLimit() {
+  try {
+    const response = await axios.get(
+    server_domain + "/users/searchLimit", 
+    { withCredentials: true }
+    );
+    console.log(response);
+    return response;
+  } catch (err) {
+    console.log(err);
+    if (err.response) {
+      return err.response;
+    }
+    return
+  }
+}
+
+export async function apiSetSearchLimit(searchLimit) {
+  try {
+    const response = await axios.put(
+    server_domain + "/users/searchLimit", 
+    { searchLimit: searchLimit }, 
+    { withCredentials: true }
+    );
+    console.log(response);
+    return response;
+  } catch (err) {
+    console.log(err);
+    if (err.response) {
+      return err.response;
+    }
+    return
+  }
+}
+
+export async function apiCreateNewRecipe(recipe_data) {
+  try {
+    const response = await axios.post(
+      server_domain + `/recipes/`,
+      { recipe_data: recipe_data },
       { withCredentials: true }
     );
     console.log(response);
@@ -79,9 +188,26 @@ export async function apiGetLastWatched() {
 
 export async function apiGetRecipeById(recipe_id) {
   try {
-    const response = await this.axios.get(
-      server_domain + `/recipes/${this.$route.params.recipeId}`,
-      { recipeId: recipe_id },
+    const response = await axios.get(
+    server_domain + `/recipes/${recipe_id}`,
+    { recipeId: recipe_id },
+    { withCredentials: true }
+    );
+    console.log(response);
+    return response;
+  } catch (err) {
+    console.log(err);
+    if (err.response) {
+      return err.response;
+    }
+    return
+  }
+}
+
+export async function apiGet3RandomRecipes() {
+  try {
+    const response = await axios.get(
+      server_domain + `/recipes/random`,
       { withCredentials: true }
     );
     console.log(response);
@@ -95,28 +221,11 @@ export async function apiGetRecipeById(recipe_id) {
   }
 }
 
-export async function apiAddToFavorites(recipe_id) {
+export async function apiSearchRecipes(search_data) {
   try {
-    const response = await this.axios.put(
-      server_domain + `/users/favorites`,
-      { recipeId: recipe_id },
-      { withCredentials: true }
-    );
-    return response;
-  } catch (err) {
-    console.log(err);
-    if (err.response) {
-      return err.response;
-    }
-    return
-  }
-}
-
-export async function apiAddToLastWatched(recipe_id) {
-  try {
-    const response = await this.axios.put(
-      server_domain + `/users/lastWatched`,
-      { recipeId: recipe_id },
+    const response = await axios.get(
+      server_domain + `/recipes/search`,
+      {search_data: search_data},
       { withCredentials: true }
     );
     console.log(response);

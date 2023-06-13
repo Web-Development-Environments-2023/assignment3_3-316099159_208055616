@@ -78,16 +78,8 @@ Vue.config.productionTip = false;
 
 const shared_data = {
   ...store,
-  apiLogin: apiCalls.apiLogin,
-  apiLogout: apiCalls.apiLogout,
-  apiGetRandomRecipes: apiCalls.apiGetRandomRecipes,
-  apiGetLastWatched: apiCalls.apiGetLastWatched
 };
 console.log(shared_data);
-
-if(Vue.prototype.$root !== undefined) {
-  Vue.prototype.$root.store = shared_data;
-} 
 
 new Vue({
   store,

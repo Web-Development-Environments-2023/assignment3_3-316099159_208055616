@@ -9,7 +9,7 @@
     <RecipePreviewList title="Last Viewed Recipes" :class="{
       blur: !username,
       center: true
-    }" :recipes="lastWatchedRecipes">
+    }" :recipes="lastWatchedRecipes.slice(0, 3)">
     </RecipePreviewList>
   </div>
 </template>
@@ -31,6 +31,9 @@ export default {
   },
   mounted() {
     this.$store.dispatch("updateRandomRecipes");
+    if (this.username) {
+      this.$store.dispatch("updateLastWatchedRecipes", this.username);
+    }
   },
 };
 </script>

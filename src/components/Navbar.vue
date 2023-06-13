@@ -35,7 +35,7 @@
           <b-nav-item v-if="username" :to="{ name: 'createRecipe' }" class="nav-link">
             Create Recipe
           </b-nav-item>
-          <b-nav-item v-if="username" @click="logout" class="nav-link">
+          <b-nav-item v-if="username" @click="onLogout" class="nav-link">
             Logout
           </b-nav-item>
         </b-navbar-nav>
@@ -55,7 +55,7 @@ export default {
     }),
   },
   props: {
-    logout: {
+    onLogout: {
       type: Function,
       required: true,
     },

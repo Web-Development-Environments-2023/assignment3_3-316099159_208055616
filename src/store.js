@@ -6,9 +6,12 @@ Vue.use(Vuex);
 
 const store = new Vuex.Store({
   state: {
-    username: null,
-    randomRecipes: [],
+    username: localStorage.getItem("username"),
     lastWatchedRecipes: [],
+    favoriteRecipes: [],
+    myRecipes: [],
+    searchLimit: 5,
+    randomRecipes: [],
   },
 
 
@@ -17,12 +20,24 @@ const store = new Vuex.Store({
       state.username = newUsername;
     },
 
-    setRandomRecipes(state, recipes) {
-      state.randomRecipes = recipes;
+    setLastWatchedRecipes(state, recipes) {
+      state.lastWatchedRecipes = recipes;
     },
 
-    setLastViewdRecipes(state, recipes) {
-      state.lastWatchedRecipes = recipes;
+    setFavoriteRecipes(state, recipes) {
+      state.favoriteRecipes = recipes;
+    },
+
+    setMyRecipes(state, recipes) {
+      state.myRecipes = recipes;
+    },
+
+    setSearchLimit(state, limit) {
+      state.searchLimit = limit;
+    },
+
+    setRandomRecipes(state, recipes) {
+      state.randomRecipes = recipes;
     },
   },
 
@@ -59,11 +74,11 @@ const store = new Vuex.Store({
       }
     },
 
-    updateRandomRecipes({ commit }) {
-      apiCalls.apiGetRandomRecipes()
+    updateFavoriteRecipes({ commit }) {
+      apiCalls.apiGenericGetUsersRecipes("favorites")
       .then((response) => {
         if (response.status === 200) {
-          commit('setRandomRecipes', response.data);
+          commit('setFavoriteRecipes', response.data);
         }
       })
       .catch((err) => {
@@ -72,10 +87,46 @@ const store = new Vuex.Store({
     },
 
     updateLastWatchedRecipes({ commit }) {
-      apiCalls.apiGetLastWatched()
+      apiCalls.apiGenericGetUsersRecipes("lastWatched")
       .then((response) => {
         if (response.status === 200) {
           commit('setLastWatchedRecipes', response.data);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    },
+
+    updateMyRecipes({ commit }) {
+      apiCalls.apiGenericGetUsersRecipes("myRecipes")
+      .then((response) => {
+        if (response.status === 200) {
+          commit('setMyRecipes', response.data);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    },    
+
+    updateSearchLimit({ commit }) {
+      apiCalls.apiGetSearchLimit()
+      .then((response) => {
+        if (response.status === 200) {
+          commit('setSearchLimit', response.data);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    },
+
+    updateRandomRecipes({ commit }) {
+      apiCalls.apiGet3RandomRecipes()
+      .then((response) => {
+        if (response.status === 200) {
+          commit('setRandomRecipes', response.data);
         }
       })
       .catch((err) => {
@@ -90,12 +141,24 @@ const store = new Vuex.Store({
       return state.username;
     },
 
-    getRandomRecipes(state) {
-      return state.randomRecipes;
+    getFavoriteRecipes(state) {
+      return state.favoriteRecipes;
     },
 
     getLastWatchedRecipes(state) {
       return state.lastWatchedRecipes;
+    },
+
+    getMyRecipes(state) {
+      return state.myRecipes;
+    },
+
+    getSearchLimit(state) {
+      return state.searchLimit;
+    },
+
+    getRandomRecipes(state) {
+      return state.randomRecipes;
     },
   },
 });

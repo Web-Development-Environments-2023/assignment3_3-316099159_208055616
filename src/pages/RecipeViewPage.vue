@@ -21,31 +21,42 @@ export default {
     };
   },
   methods: {
-    async addToFavorites(recipeId) {
-      const response = await apiCalls.apiAddToFavorites(this.$route.params.recipeId);
-      if (response.status === 200) {
-        this.$root.toast("AddToFavorites", "Recipe added to favorites", "success");
+    async addToFavorites(recipe_id) {
+      const response = await apiCalls.apiGenericAddToUseresRecipes("favorites", recipe_id);
+      if (!response) {
+        this.$root.toast("AddToLastWatched", "Recipe added to last watched", "fail");
+        return;
       }
-      else {
-        this.$root.toast("AddToFavorites", "Recipe not added to favorites", "fail");
+      else if (response.status !== 200) {
+        this.$root.toast("AddToLastWatched", response.data.message, "fail");
+        return
+      }
+      else if (response.status === 200) {
+        this.$root.toast("AddToLastWatched", "Recipe added to last watched", "success");
+        this.$store.dispatch("updateFavoriteRecipes");
       }
     }
   },
   async mounted() {
     // getting the recipe from the server
-    const recipe_id = this.$route.params.recipeId
+    const recipe_id = parseInt(this.$route.params.recipeId)
     const response = await apiCalls.apiGetRecipeById(recipe_id)
-    if (response.status !== 200) {
+    if (!response || response.status !== 200) {
       this.$router.replace("/NotFound");
       return
     }
-    const addResponse = await apiCalls.apiAddToLastWatched(parseInt(recipe_id));
-    if (addResponse.status === 200) {
+    const addResponse = await apiCalls.apiGenericAddToUseresRecipes("lastWatched", recipe_id);
+    if (!addResponse) {
+      this.$root.toast("AddToLastWatched", "Recipe added to last watched", "fail");
+    }
+    else if (addResponse.status !== 200) {
+      this.$root.toast("AddToLastWatched", addResponse.data.message, "fail");
+    }
+    else if (addResponse.status === 200) {
       this.$root.toast("AddToLastWatched", "Recipe added to last watched", "success");
+      this.$store.dispatch("updateLastWatchedRecipes");
     }
-    else {
-      this.$root.toast("AddToLastWatched", "Recipe not added to last watched", "fail");
-    }
+
 
     // mapping the response to the recipe object
     const {

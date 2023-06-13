@@ -69,17 +69,17 @@ export default {
       }
       const { username, password } = this.form;
       const response = await this.$store.dispatch("login", { username, password });
-      console.log(response);
       if (!response) {
         return;
       }
       if (response.status !== 200) {
-        console.log(response);
         this.form.submitError = response.data.message;
         return;
       }
-      this.$router.push("/");
+      this.$store.dispatch("updateFavoriteRecipes");
       this.$store.dispatch("updateLastWatchedRecipes");
+      this.$store.dispatch("updateMyRecipes");
+      this.$router.push("/");
     }
   }
 };

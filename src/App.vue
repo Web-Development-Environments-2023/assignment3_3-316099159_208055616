@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Navbar :logout="Logout"></Navbar>
+    <Navbar :onLogout="onLogout"></Navbar>
     <keep-alive exclude="RecipeViewPage">
       <router-view />
     </keep-alive>
@@ -15,9 +15,10 @@ export default {
     Navbar,
   },
   methods: {
-    async Logout() {
+    async onLogout() {
       const response = await this.$store.dispatch("logout");
       if (!response) {
+        this.$root.toast("Logout", "Failed to logout", "fail");
         return;
       }
       else if (response.status !== 200) {
