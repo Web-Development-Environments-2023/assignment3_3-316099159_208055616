@@ -51,6 +51,7 @@ export async function apiLogout() {
   try {
     const response = await axios.post(
     server_domain + "/Logout",
+    {},
     { withCredentials: true }
     );
     console.log(response);
@@ -111,9 +112,6 @@ export async function apiGenericAddToUseresRecipes(attribute, recipe_id) {
   else if (attribute === "lastWatched") {
     url += "lastWatched";
   }
-  else if (attribute === "myRecipes") {
-    url += "myRecipes";
-  }
   else {
     console.log("apiGenericAddToUsersRecipes: invalid attribute")
     return
@@ -172,6 +170,7 @@ export async function apiSetSearchLimit(searchLimit) {
 
 export async function apiCreateNewRecipe(recipe_data) {
   try {
+    console.log("apiCreateNewRecipe");
     const response = await axios.post(
       server_domain + `/recipes/`,
       { recipe_data: recipe_data },

@@ -8,6 +8,7 @@
 </template>
 
 <script>
+import { apiCreateNewRecipe } from "./api_calls";
 import Navbar from "./components/Navbar.vue";
 export default {
   name: "App",
@@ -36,6 +37,7 @@ export default {
       this.$store.dispatch("updateLastWatchedRecipes");
       this.$store.dispatch("updateFavoriteRecipes");
       this.$store.dispatch("updateMyRecipes");
+      apiCreateNewRecipe({})
     }
   },
   created() {
