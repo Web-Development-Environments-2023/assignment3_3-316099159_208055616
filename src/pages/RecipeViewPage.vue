@@ -24,15 +24,15 @@ export default {
     async addToFavorites(recipe_id) {
       const response = await apiCalls.apiGenericAddToUseresRecipes("favorites", recipe_id);
       if (!response) {
-        this.$root.toast("AddToLastWatched", "Recipe added to last watched", "fail");
+        this.$root.toast("AddToFavorites", "Recipe added to last watched", "fail");
         return;
       }
       else if (response.status !== 200) {
-        this.$root.toast("AddToLastWatched", response.data.message, "fail");
+        this.$root.toast("AddToFavorites", response.data.message, "fail");
         return
       }
       else if (response.status === 200) {
-        this.$root.toast("AddToLastWatched", "Recipe added to last watched", "success");
+        this.$root.toast("AddToFavorites", "Recipe added to last watched", "success");
         this.$store.dispatch("updateFavoriteRecipes");
       }
     }
