@@ -1,28 +1,23 @@
 <template>
   <router-link :to="{ name: 'recipe', params: { recipeId: recipe.id } }" class="recipe-preview">
-    <div class="recipe-body">
-      <img v-if="image_load" :src="recipe.image" class="recipe-image" />
-    </div>
-    <div class="recipe-footer">
-      <div :title="recipe.title" class="recipe-title">
-        {{ recipe.title }}
-      </div>
-      <ul class="recipe-overview">
-        <li>{{ recipe.readyInMinutes }} minutes</li>
-        <li>{{ recipe.popularity }} likes</li>
-      </ul>
-      <div v-if="recipe.vegetarian">
-        <i class="fas fa-leaf"></i> <!-- Font Awesome leaf icon -->
-      </div>
-
-      <div v-if="recipe.vegan">
-        <i class="fas fa-seedling"></i> <!-- Font Awesome seedling icon -->
-      </div>
-
-      <div v-if="recipe.glutenFree">
-        <i class="fas fa-bread-slice"></i> <!-- Font Awesome bread-slice icon -->
-      </div>
-    </div>
+    <b-card v-if="image_load" :title="recipe.title" :img-src="recipe.image" img-top tag="article"
+      style="max-width: 20rem;" class="mb-2">
+      <b-card-text>
+        <ul class="recipe-overview">
+          <li>{{ recipe.readyInMinutes }} minutes</li>
+          <li>{{ recipe.popularity }} likes</li>
+        </ul>
+        <div v-if="recipe.vegan">
+          <img src="../../vegan-icon.jpg" class="icon" />
+        </div>
+        <div v-if="recipe.vegetarian && !recipe.vegan">
+          <img src="../../vegetarian-icon.png" class="icon" />
+        </div>
+        <div v-if="recipe.glutenFree">
+          <img src="../../gluten-free-icon.png" class="icon" />
+        </div>
+      </b-card-text>
+    </b-card>
   </router-link>
 </template>
 
@@ -48,80 +43,9 @@ export default {
 </script>
 
 <style scoped>
-.recipe-preview {
-  display: inline-block;
-  width: 90%;
-  height: 100%;
-  position: relative;
+.icon {
+  width: 20px;
+  height: 20px;
   margin: 10px 10px;
-}
-
-.recipe-preview>.recipe-body {
-  width: 100%;
-  height: 200px;
-  position: relative;
-}
-
-.recipe-preview .recipe-body .recipe-image {
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: auto;
-  margin-bottom: auto;
-  display: block;
-  width: 100%;
-  height: 100%;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  background-size: cover;
-  object-fit: cover;
-}
-
-.recipe-preview .recipe-footer {
-  width: 100%;
-  height: 50%;
-  overflow: hidden;
-}
-
-.recipe-preview .recipe-footer .recipe-title {
-  padding: 10px 10px;
-  width: 100%;
-  font-size: 12pt;
-  text-align: left;
-  white-space: nowrap;
-  overflow: hidden;
-  -o-text-overflow: ellipsis;
-  text-overflow: ellipsis;
-}
-
-.recipe-preview .recipe-footer ul.recipe-overview {
-  padding: 5px 10px;
-  width: 100%;
-  display: -webkit-box;
-  display: -moz-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-flex: 1;
-  -moz-box-flex: 1;
-  -o-box-flex: 1;
-  box-flex: 1;
-  -webkit-flex: 1 auto;
-  -ms-flex: 1 auto;
-  flex: 1 auto;
-  table-layout: fixed;
-  margin-bottom: 0px;
-}
-
-.recipe-preview .recipe-footer ul.recipe-overview li {
-  -webkit-box-flex: 1;
-  -moz-box-flex: 1;
-  -o-box-flex: 1;
-  -ms-box-flex: 1;
-  box-flex: 1;
-  -webkit-flex-grow: 1;
-  flex-grow: 1;
-  width: 90px;
-  display: table-cell;
-  text-align: center;
 }
 </style>
