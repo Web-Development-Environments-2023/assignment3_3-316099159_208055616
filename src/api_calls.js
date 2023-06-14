@@ -1,20 +1,22 @@
 const server_domain = "http://localhost:3000"
 import axios from "axios";
 
-export async function apiRegister(username, first_name, last_name, country, password, email) {
+export async function apiRegister(username, firstname, lastname, country, password, email) {
   try {
     const response = await axios.post(
     server_domain + "/Register",
     {
       username: username,
-      first_name: first_name,
-      last_name: last_name,
+      firstname: firstname,
+      lastname: lastname,
       country: country,
       password: password,
       email: email,
     },
     { withCredentials: true }
     );
+    console.log(response);
+    return response;
   } catch (err) {
     console.log(err);
     if (err.response) {

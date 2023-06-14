@@ -60,11 +60,6 @@ export default {
       required: true,
     },
   },
-  data() {
-    return {
-      isDropdownOpen: false,
-    };
-  },
 };
 </script>
 
