@@ -2,7 +2,6 @@ import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
 
 import Vue from "vue";
-import Vuex from 'vuex';
 import App from "./App.vue";
 import VueAxios from "vue-axios";
 import axios from "axios";
@@ -10,7 +9,6 @@ import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import routes from "./routes";
 import VueRouter from "vue-router";
 import store from './store';
-import * as apiCalls from "./api_calls";
 
 Vue.use(VueRouter);
 const router = new VueRouter({
