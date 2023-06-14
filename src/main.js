@@ -61,11 +61,9 @@ axios.interceptors.request.use(
 // Add a response interceptor
 axios.interceptors.response.use(
   function(response) {
-    // Do something with response data
     return response;
   },
   function(error) {
-    // Do something with response error
     return Promise.reject(error);
   }
 );
@@ -74,19 +72,11 @@ Vue.use(VueAxios, axios);
 
 Vue.config.productionTip = false;
 
-const shared_data = {
-  ...store,
-};
-console.log(shared_data);
+console.log(store);
 
 new Vue({
   store,
   router,
-  data() {
-    return {
-      store: shared_data,
-    };
-  },
   methods: {
     toast(title, content, variant = null, append = false) {
       this.$bvToast.toast(`${content}`, {

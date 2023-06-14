@@ -76,8 +76,8 @@ export default {
         this.form.submitError = response.data.message;
         return;
       }
-      this.$store.dispatch("updateFavoriteRecipes");
       this.$store.dispatch("updateLastWatchedRecipes");
+      this.$store.dispatch("updateFavoriteRecipes");
       this.$store.dispatch("updateMyRecipes");
       this.$router.push("/");
     }

@@ -32,6 +32,16 @@ export default {
         this.$forceUpdate();
       });
     },
+    fetchUserRecipes() {
+      this.$store.dispatch("updateLastWatchedRecipes");
+      this.$store.dispatch("updateFavoriteRecipes");
+      this.$store.dispatch("updateMyRecipes");
+    }
+  },
+  created() {
+    if (this.$store.state.username) {
+      this.fetchUserRecipes();
+    }
   }
 };
 </script>
@@ -45,5 +55,9 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
   min-height: 100vh;
+  // background-image: url('./assets/background.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 </style>
