@@ -7,14 +7,16 @@
           <li>{{ recipe.readyInMinutes }} minutes</li>
           <li>{{ recipe.popularity }} likes</li>
         </ul>
-        <div v-if="recipe.vegan">
-          <img src="../../vegan-icon.jpg" class="icon" />
-        </div>
-        <div v-if="recipe.vegetarian && !recipe.vegan">
-          <img src="../../vegetarian-icon.png" class="icon" />
-        </div>
-        <div v-if="recipe.glutenFree">
-          <img src="../../gluten-free-icon.png" class="icon" />
+        <div class="icons">
+          <div v-if="recipe.vegan">
+            <img src="../assets/vegan-icon.jpg" class="icon" />
+          </div>
+          <div v-if="recipe.vegetarian && !recipe.vegan">
+            <img src="../assets/vegetarian-icon.png" class="icon" />
+          </div>
+          <div v-if="recipe.glutenFree">
+            <img src="../assets/gluten-free-icon.png" class="icon" />
+          </div>
         </div>
       </b-card-text>
     </b-card>
@@ -43,6 +45,13 @@ export default {
 </script>
 
 <style scoped>
+.icons {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
 .icon {
   width: 20px;
   height: 20px;

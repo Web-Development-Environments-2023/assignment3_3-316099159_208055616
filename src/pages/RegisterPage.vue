@@ -11,7 +11,7 @@
         <b-form-invalid-feedback v-else-if="!$v.form.username.length">
           Username length should be between 3-8 characters long
         </b-form-invalid-feedback>
-        <b-form-invalid-feedback v-if="!$v.form.username.alpha">
+        <b-form-invalid-feedback v-if="!$v.form.username.alphaNum">
           Username alpha
         </b-form-invalid-feedback>
       </b-form-group>
@@ -107,6 +107,7 @@ import {
   minLength,
   maxLength,
   alpha,
+  alphaNum,
   sameAs,
   email,
   helpers
@@ -136,7 +137,7 @@ export default {
       username: {
         required,
         length: (u) => minLength(3)(u) && maxLength(8)(u),
-        alpha
+        alphaNum
       },
       firstName: {
         required,

@@ -12,19 +12,18 @@
             <div>Likes: {{ recipe.popularity }} likes</div>
             <div v-if="recipe.servings">Servings: {{ recipe.servings }}</div>
             <div>
-              Vegan:
-              <span v-if="recipe.vegan">V</span>
-              <span v-else>X</span>
-            </div>
-            <div>
-              Vegaterian:
-              <span v-if="recipe.vegetarian">V</span>
-              <span v-else>X</span>
-            </div>
-            <div>
-              Gluten Free:
-              <span v-if="recipe.glutenFree">V</span>
-              <span v-else>X</span>
+              Dietary Preferences:
+              <div class="icons">
+                <div v-if="recipe.vegan">
+                  <img src="../assets/vegan-icon.jpg" class="icon" />
+                </div>
+                <div v-if="recipe.vegetarian && !recipe.vegan">
+                  <img src="../assets/vegetarian-icon.png" class="icon" />
+                </div>
+                <div v-if="recipe.glutenFree">
+                  <img src="../assets/gluten-free-icon.png" class="icon" />
+                </div>
+              </div>
             </div>
           </div>
           Ingredients:
@@ -84,5 +83,18 @@ export default {
   margin-left: auto;
   margin-right: auto;
   width: 50%;
+}
+
+.icons {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+  margin: 10px 10px;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="myNavbar">
     <b-navbar toggleable="lg" type="dark" variant="info">
       <b-navbar-brand :to="{ name: 'main' }" tag="router-link" class="nav-link">
         Main Page
@@ -26,12 +26,14 @@
           <b-nav-item v-if="!username" :to="{ name: 'login' }" tag="router-link" class="nav-link">
             Login
           </b-nav-item>
-          <b-nav-text v-if="username">{{ username }}</b-nav-text>
-          <b-nav-item-dropdown v-if="username" text="Profile" right>
-            <b-dropdown-item :to="{ name: 'favoriteRecipes' }">Favorite Recipes</b-dropdown-item>
-            <b-dropdown-item :to="{ name: 'myRecipes' }">Recipes</b-dropdown-item>
-            <b-dropdown-item :to="{ name: 'familyRecipes' }">Family Recipes</b-dropdown-item>
-          </b-nav-item-dropdown>
+          <!-- <b-nav-text v-if="username">{{ username }}</b-nav-text> -->
+          <b-nav-item>
+            <b-nav-item-dropdown v-if="username" :text="username" right>
+              <b-dropdown-item :to="{ name: 'favoriteRecipes' }">Favorite Recipes</b-dropdown-item>
+              <b-dropdown-item :to="{ name: 'myRecipes' }">Recipes</b-dropdown-item>
+              <b-dropdown-item :to="{ name: 'familyRecipes' }">Family Recipes</b-dropdown-item>
+            </b-nav-item-dropdown>
+          </b-nav-item>
           <b-nav-item v-if="username" :to="{ name: 'createRecipe' }" class="nav-link">
             Create Recipe
           </b-nav-item>
@@ -65,4 +67,8 @@ export default {
 
 <style lang="scss">
 @import "@/scss/form-style.scss";
+
+.myNavbar {
+  margin-bottom: 20px;
+}
 </style>
