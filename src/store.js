@@ -61,7 +61,6 @@ const store = new Vuex.Store({
     },
 
     async logout({ commit }) {
-      localStorage.removeItem("username");
       try {
         const response = await apiCalls.apiLogout();
         if (response.status === 200) {
