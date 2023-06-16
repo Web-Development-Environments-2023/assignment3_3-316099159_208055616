@@ -5,7 +5,8 @@
       center: true
     }" :recipes="randomRecipes">
     </RecipePreviewList>
-    <router-link v-if="!username" to="/login" tag="button">You need to Login to vue this</router-link>
+    <b-button id="regenerateButton" variant="primary" @click="this.onClickRegenerateRandomRecepies">Regenerate
+      Recepies</b-button>
     <RecipePreviewList title="Last Viewed Recipes" :class="{
       blur: !username,
       center: true
@@ -28,6 +29,11 @@ export default {
       randomRecipes: state => state.randomRecipes,
       lastWatchedRecipes: state => state.lastWatchedRecipes
     }),
+  },
+  methods: {
+    onClickRegenerateRandomRecepies() {
+      this.$store.dispatch("updateRandomRecipes");
+    },
   },
   mounted() {
     this.$store.dispatch("updateRandomRecipes");
@@ -52,5 +58,9 @@ export default {
 ::v-deep .blur .recipe-preview {
   pointer-events: none;
   cursor: default;
+}
+
+#regenerateButton {
+  margin: 10px 0 10px;
 }
 </style>
