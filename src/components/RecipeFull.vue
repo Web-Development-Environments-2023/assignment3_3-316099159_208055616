@@ -1,8 +1,9 @@
 <template>
-  <div>
+  <div v-if="image_load">
     <div class="recipe-header mt-3 mb-4">
       <h1>{{ recipe.title }}</h1>
-      <img v-if="image_load" :src="recipe.image" class="center" />
+      <img v-if="image_exists" :src="recipe.image" class="center" />
+      <img src='../assets/image-placeholder.png' class="center" />
     </div>
     <div class="recipe-body">
       <div class="wrapper">
@@ -53,11 +54,16 @@ export default {
   mounted() {
     this.axios.get(this.recipe.image).then((i) => {
       this.image_load = true;
+      this.image_exists = true;
+    }).catch((e) => {
+      this.image_load = true;
+      this.image_exists = false;
     });
   },
   data() {
     return {
-      image_load: false
+      image_load: false,
+      image_exists: false
     };
   },
   props: {
@@ -93,8 +99,8 @@ export default {
 }
 
 .icon {
-  width: 20px;
-  height: 20px;
+  width: 35px;
+  height: 35px;
   margin: 10px 10px;
 }
 </style>

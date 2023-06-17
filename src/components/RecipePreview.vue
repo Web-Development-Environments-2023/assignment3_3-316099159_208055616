@@ -1,6 +1,7 @@
 <template>
   <router-link :to="{ name: 'recipe', params: { recipeId: recipe.id } }" class="recipe-preview">
-    <b-card v-if="image_load" :title="recipe.title" :img-src="recipe.image" img-top tag="article"
+    <b-card v-if="image_load" :title="recipe.title"
+      :img-src="image_exists ? recipe.image : '../assets/image-placeholder.png'" img-top tag="article"
       style="max-width: 20rem;" class="mb-2">
       <b-card-text>
         <ul class="recipe-overview">
@@ -27,12 +28,17 @@
 export default {
   mounted() {
     this.axios.get(this.recipe.image).then((i) => {
+      this.image_exists = true;
+      this.image_load = true;
+    }).catch((e) => {
+      this.image_exists = false;
       this.image_load = true;
     });
   },
   data() {
     return {
-      image_load: false
+      image_load: false,
+      image_exists: false
     };
   },
   props: {
