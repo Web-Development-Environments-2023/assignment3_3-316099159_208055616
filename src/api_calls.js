@@ -222,12 +222,19 @@ export async function apiGet3RandomRecipes() {
   }
 }
 
-export async function apiSearchRecipes(search_data) {
+export async function apiSearchRecipes(searchQuery, cuisines, diets, intolerances) {
   try {
     const response = await axios.get(
       server_domain + `/recipes/search`,
-      {search_data: search_data},
-      { withCredentials: true }
+      { withCredentials: true ,
+        headers: 
+        {
+          text: searchQuery, 
+          cuisines: cuisines, 
+          diets: diets, 
+          intolerances: intolerances
+        } 
+      },
     );
     console.log(response);
     return response;

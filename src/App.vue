@@ -37,6 +37,7 @@ export default {
       this.$store.dispatch("updateLastWatchedRecipes");
       this.$store.dispatch("updateFavoriteRecipes");
       this.$store.dispatch("updateMyRecipes");
+      this.$store.dispatch("updateSearchLimit");
     }
   },
   created() {

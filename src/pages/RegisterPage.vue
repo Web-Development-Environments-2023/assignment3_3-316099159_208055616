@@ -100,7 +100,7 @@
 </template>
 
 <script>
-import * as apiCalls from "../api_calls.js";
+import { apiRegister } from "../api_calls.js";
 import countries from "../assets/countries";
 import {
   required,
@@ -180,12 +180,12 @@ export default {
         return;
       }
       const { username, firstName, lastName, country, password, email } = this.form;
-      const response = await apiCalls.apiRegister(username, firstName, lastName, country, password, email);
+      const response = await apiRegister(username, firstName, lastName, country, password, email);
       if (!response) {
         this.form.submitError = "Server error";
-      } else if (response.status !== 200) {
+      } else if (response.status !== 201) {
         this.form.submitError = response.data.message;
-      } else if (response.status === 200) {
+      } else if (response.status === 201) {
         this.$router.push({ name: "Login" });
       }
     },
