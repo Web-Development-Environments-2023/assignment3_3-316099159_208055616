@@ -114,7 +114,6 @@ export default {
       } else if (response.status !== 200) {
         this.form.submitError = response.data.message;
       } else if (response.status === 200) {
-        console.log(response.data);
         this.resultRecipes.push(...response.data);
       }
     },

@@ -168,12 +168,19 @@ export async function apiSetSearchLimit(searchLimit) {
   }
 }
 
-export async function apiCreateNewRecipe(recipe_data) {
+export async function apiCreateNewRecipe(title, image_url, readyInMinutes, vegetarian, vegan, glutenFree) {
   try {
     console.log("apiCreateNewRecipe");
     const response = await axios.post(
       server_domain + `/recipes/`,
-      { recipe_data: recipe_data },
+      { 
+        title: title,
+        image: image_url,
+        readyInMinutes: readyInMinutes,
+        vegetarian: vegetarian,
+        vegan: vegan,
+        glutenFree: glutenFree 
+      },
       { withCredentials: true }
     );
     console.log(response);
