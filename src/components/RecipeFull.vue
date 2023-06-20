@@ -3,7 +3,7 @@
     <div class="recipe-header mt-3 mb-4">
       <h1>{{ recipe.title }}</h1>
       <img v-if="image_exists" :src="recipe.image" class="center" />
-      <img src='../assets/image-placeholder.png' class="center" />
+      <img v-else src='../assets/image-placeholder.png' class="center" />
     </div>
     <div class="recipe-body">
       <div class="wrapper">
@@ -12,7 +12,7 @@
             <div>Ready in {{ recipe.readyInMinutes }} minutes</div>
             <div>Likes: {{ recipe.popularity }} likes</div>
             <div v-if="recipe.servings">Servings: {{ recipe.servings }}</div>
-            <div>
+            <div v-if="recipe.vegan || recipe.vegetarian || recipe.glutenFree">
               Dietary Preferences:
               <div class="icons">
                 <div v-if="recipe.vegan">
@@ -25,6 +25,9 @@
                   <img src="../assets/gluten-free-icon.png" class="icon" />
                 </div>
               </div>
+            </div>
+            <div>
+              <b-button @click="addToFavorites" pill variant="info">Add to Favorites</b-button>
             </div>
           </div>
           Ingredients:
@@ -39,7 +42,7 @@
           Instructions:
           <ol v-if="recipe.instructions">
             <li v-for="s in recipe._instructions" :key="s.number">
-              {{ s.step }}
+              <b-form-checkbox>{{ s.step }}</b-form-checkbox>
             </li>
           </ol>
           <span v-else> no instructions listed </span>
@@ -71,6 +74,10 @@ export default {
       type: Object,
       required: true
     },
+    addToFavorites: {
+      type: Function,
+      required: true
+    }
   }
 };
 </script>

@@ -1,11 +1,10 @@
 <template>
-  <b-container>
+  <b-container class="recipePreivewList">
     <h3>
       {{ title }}:
-      <slot></slot>
     </h3>
-    <b-row>
-      <b-col v-for="r in recipes" :key="r.id">
+    <b-row align-h="center">
+      <b-col xs="12" sm="12" md="6" lg="4" xl="4" v-for="r in recipes" :key="r.id">
         <RecipePreview class="recipePreview" :recipe="r" />
       </b-col>
     </b-row>
@@ -33,6 +32,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.recipePreivewList {
+  border: 2px solid #96ccda;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  justify-content: center;
+  align-items: center;
+  margin: 10px;
+  padding: 20px;
+}
+
 .container {
   min-height: 400px;
 }

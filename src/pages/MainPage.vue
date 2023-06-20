@@ -1,12 +1,13 @@
 <template>
   <div class="container">
-    <h1 class="title">Main Page</h1>
     <RecipePreviewList title="Random Recipes" :class="{
       center: true
     }" :recipes="randomRecipes">
     </RecipePreviewList>
-    <b-button id="regenerateButton" variant="primary" @click="this.onClickRegenerateRandomRecepies">Regenerate
-      Recepies</b-button>
+    <div class="regenerateButton">
+      <b-button variant="info" @click="this.onClickRegenerateRandomRecepies">Regenerate
+        Recepies</b-button>
+    </div>
     <RecipePreviewList title="Last Viewed Recipes" :class="{
       blur: !username,
       center: true
@@ -60,7 +61,8 @@ export default {
   cursor: default;
 }
 
-#regenerateButton {
-  margin: 10px 0 10px;
+.regenerateButton {
+  margin: 20px;
+  text-align: center;
 }
 </style>

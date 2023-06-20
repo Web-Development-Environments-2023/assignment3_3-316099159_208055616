@@ -1,9 +1,8 @@
 <template>
   <div class="container">
     <div v-if="recipe">
-      <RecipeFull :key="recipe.id" :recipe="recipe"></RecipeFull>
+      <RecipeFull :addToFavorites="addToFavorites" :key="recipe.id" :recipe="recipe"></RecipeFull>
     </div>
-    <button @click="addToFavorites(recipe.id)" v-if="recipe">Add to favorites</button>
   </div>
 </template>
 
