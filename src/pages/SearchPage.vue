@@ -1,37 +1,37 @@
 <template>
   <div>
-    <div class="container">
+    <div class="form">
       <h1 class="title">Search Page</h1>
       <b-form @submit.prevent="onSearch" @reset.prevent="onReset">
+        <div>Last Search: <b>{{ lastSearch }}</b></div>
         <b-form-group id="input-group-searchQuery" label-cols-sm="3" label="Query:" label-for="searchQuery">
           <b-form-input id="searchQuery" v-model="$v.form.searchQuery.$model" type="text"
             :state="validateState('searchQuery')"></b-form-input>
           <b-form-invalid-feedback v-if="!$v.form.searchQuery.required">
-            searchQuery is required
+            Query is required
           </b-form-invalid-feedback>
         </b-form-group>
 
         <b-form-group id="input-group-cuisines" label-cols-sm="3" label="Cuisines:" label-for="cuisines">
-          <b-form-select id="cuisines" v-model="$v.form.cuisines.$model" :options="cuisines"
-            :state="validateState('cuisines')"></b-form-select>
-          <b-form-invalid-feedback>
-            Cuisines is required
-          </b-form-invalid-feedback>
+          <b-form-select id="cuisines" :options="cuisines"></b-form-select>
         </b-form-group>
 
         <b-form-group id="input-group-diets" label-cols-sm="3" label="Diets:" label-for="diets">
-          <b-form-select id="diets" v-model="$v.form.diets.$model" :options="diets"
-            :state="validateState('diets')"></b-form-select>
-          <b-form-invalid-feedback>
-            Diets is required
-          </b-form-invalid-feedback>
+          <b-form-select id="diets" :options="diets"></b-form-select>
         </b-form-group>
 
         <b-form-group id="input-group-intolerances" label-cols-sm="3" label="Intolerances:" label-for="intolerances">
-          <b-form-select id="intolerances" v-model="$v.form.intolerances.$model" :options="intolerances"
-            :state="validateState('intolerances')"></b-form-select>
-          <b-form-invalid-feedback>
-            Intolerances is required
+          <b-form-select id="intolerances" :options="intolerances"></b-form-select>
+        </b-form-group>
+
+        <b-form-group id="input-group-searchLimit" label-cols-sm="3" label="Results Limit:" label-for="searchLimit">
+          <b-form-input id="searchLimit" v-model="$v.form.searchLimit.$model" :options="searchLimitOptions"
+            :state="validateState('searchLimit')">{{ form.searchLimit }}</b-form-input>
+          <b-form-invalid-feedback v-if="!$v.form.searchLimit.required">
+            searchLimit is required
+          </b-form-invalid-feedback>
+          <b-form-invalid-feedback v-if="!$v.form.searchLimit.inculdeIn">
+            searchLimit must be 5, 10 or 15
           </b-form-invalid-feedback>
         </b-form-group>
 
@@ -42,8 +42,12 @@
         Search failed: {{ form.submitError }}
       </b-alert>
     </div>
-    <div class="resultRecipes">
-      <RecipePreviewList v-if="resultRecipes.length > 0" title="Reesult Recipes" :class="{
+    <div v-if="resultRecipes.length > 0" class="centeredDiv">
+      <b-button-group>
+        <b-button @click="sortByTime" variant="outline-primary">Sort By Time</b-button>
+        <b-button @click="sortByLikes" variant="outline-primary">Sort By Likes</b-button>
+      </b-button-group>
+      <RecipePreviewList title="Result Recipes" :class="{
         center: true
       }" :recipes="resultRecipes"></RecipePreviewList>
     </div>
@@ -51,7 +55,7 @@
 </template>
 
 <script>
-import { apiSearchRecipes } from "../api_calls.js";
+import { apiSearchRecipes, apiSetSearchLimit } from "../api_calls.js";
 import RecipePreviewList from "../components/RecipePreviewList.vue";
 import { required } from "vuelidate/lib/validators";
 import { cuisines, diets, intolerances } from "../assets/searchConsts.js";
@@ -68,11 +72,14 @@ export default {
         cuisines: [],
         diets: [],
         intolerances: [],
+        searchLimit: this.$store.lastSearch,
+        submitError: undefined
       },
       cuisines: [{ value: null, text: "", disabled: true }],
       diets: [{ value: null, text: "", disabled: true }],
       intolerances: [{ value: null, text: "", disabled: true }],
       resultRecipes: [],
+      lastSearch: this.$store.searchLimit
     }
   },
   validations: {
@@ -80,15 +87,21 @@ export default {
       searchQuery: {
         required
       },
-      cuisines: {
-        required
-      },
-      diets: {
-        required
-      },
-      intolerances: {
-        required
+      searchLimit: {
+        required,
+        inculdeIn(value) {
+          return ["5", "10", "15"].includes(value);
+        }
       }
+    }
+  },
+  computed: {
+    searchLimitOptions() {
+      return [
+        { value: 5, text: '5' },
+        { value: 10, text: '10' },
+        { value: 15, text: '15' }
+      ];
     }
   },
   mounted() {
@@ -102,15 +115,21 @@ export default {
       return $dirty ? !$error : null;
     },
     async onSearch() {
-      this.resultRecipes = [];
       this.$v.form.$touch();
       if (this.$v.form.$anyError) {
         return;
       }
+      this.form.submitError = undefined;
+      this.resultRecipes = [];
+      this.$store.dispatch("updateLastSearch", this.form.searchQuery)
+      this.lastSearch = this.form.searchQuery;
+      await apiSetSearchLimit(parseInt(this.form.searchLimit));
       const { searchQuery, cuisines, diets, intolerances } = this.form;
       const response = await apiSearchRecipes(searchQuery, cuisines, diets, intolerances);
       if (!response) {
         this.form.submitError = "Server error";
+      } else if (response.status === 204) {
+        this.form.submitError = "No results found";
       } else if (response.status !== 200) {
         this.form.submitError = response.data.message;
       } else if (response.status === 200) {
@@ -120,13 +139,24 @@ export default {
     onReset() {
       this.form = {
         searchQuery: "",
-        cuisines: null,
-        diets: null,
-        intolerances: null,
+        cuisines: [],
+        diets: [],
+        intolerances: [],
+        searchLimit: this.$store.lastSearch,
       };
       this.$nextTick(() => {
         this.$v.$reset();
       });
+    },
+    sortByTime() {
+      this.resultRecipes.sort((a, b) => {
+        return a.readyInMinutes - b.readyInMinutes;
+      })
+    },
+    sortByLikes() {
+      this.resultRecipes.sort((a, b) => {
+        return b.popularity - a.popularity;
+      })
     }
   }
 }
@@ -134,11 +164,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.container {
+.form {
   max-width: 500px;
+  margin: 0 auto;
 }
 
-.resultRecipes {
-  margin-top: 50px;
+.centeredDiv {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 </style>

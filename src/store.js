@@ -12,6 +12,7 @@ const store = new Vuex.Store({
     myRecipes: [],
     searchLimit: 5,
     randomRecipes: [],
+    lastSearch: ""
   },
 
 
@@ -38,6 +39,10 @@ const store = new Vuex.Store({
 
     setRandomRecipes(state, recipes) {
       state.randomRecipes = recipes;
+    },
+
+    setLastSearch(state, search) {
+      state.lastSearch = search;
     },
   },
 
@@ -132,6 +137,10 @@ const store = new Vuex.Store({
         console.log(err);
       });
     },
+
+    updateLastSearch({ commit }, search) {
+      commit('setLastSearch', search);
+    },
   },
 
 
@@ -158,6 +167,10 @@ const store = new Vuex.Store({
 
     getRandomRecipes(state) {
       return state.randomRecipes;
+    },
+
+    getLastSearch(state) {
+      return state.lastSearch;
     },
   },
 });

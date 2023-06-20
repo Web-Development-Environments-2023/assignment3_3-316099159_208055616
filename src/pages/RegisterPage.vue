@@ -12,7 +12,7 @@
           Username length should be between 3-8 characters long
         </b-form-invalid-feedback>
         <b-form-invalid-feedback v-if="!$v.form.username.alphaNum">
-          Username alpha
+          Username should contain letters and numbers only
         </b-form-invalid-feedback>
       </b-form-group>
 
@@ -23,7 +23,7 @@
           First Name is required
         </b-form-invalid-feedback>
         <b-form-invalid-feedback v-if="!$v.form.firstName.alpha">
-          First Name alpha
+          First Name should contain letters only
         </b-form-invalid-feedback>
       </b-form-group>
 
@@ -34,7 +34,7 @@
           Last Name is required
         </b-form-invalid-feedback>
         <b-form-invalid-feedback v-if="!$v.form.lastName.alpha">
-          Last Name alpha
+          Last Name should contain letters only
         </b-form-invalid-feedback>
       </b-form-group>
 
@@ -56,10 +56,10 @@
           Password should have a length between 5 and 10 characters
         </b-form-invalid-feedback>
         <b-form-invalid-feedback v-else-if="!$v.form.password.containsSpecialChar">
-          Password should contain at least one special character
+          Password must contain at least one special character
         </b-form-invalid-feedback>
         <b-form-invalid-feedback v-else-if="!$v.form.password.containsNumber">
-          Password should contain at least one number
+          Password must contain at least one number
         </b-form-invalid-feedback>
       </b-form-group>
 
@@ -186,7 +186,7 @@ export default {
       } else if (response.status !== 201) {
         this.form.submitError = response.data.message;
       } else if (response.status === 201) {
-        this.$router.push({ name: "Login" });
+        this.$router.push({ name: "login" });
       }
     },
     onReset() {

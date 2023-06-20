@@ -41,8 +41,4 @@ export default {
   margin: 10px;
   padding: 20px;
 }
-
-.container {
-  min-height: 400px;
-}
 </style>

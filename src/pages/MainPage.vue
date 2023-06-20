@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <RecipePreviewList title="Random Recipes" :class="{
+    <RecipePreviewList title="Explore This Recipes" :class="{
       center: true
     }" :recipes="randomRecipes">
     </RecipePreviewList>

@@ -1,56 +1,55 @@
 <template>
-  <b-card v-if="image_load" :title="recipe.title" tag="article" style="max-width: 20rem;" class="mb-2">
-    <b-card-text>
-      <router-link :to="{ name: 'recipe', params: { recipeId: recipe.id } }" class="recipe-preview">
-        <div v-if="image_exists">
-          <img :src="recipe.image" class="recipe_image" />
+  <div>
+    <b-spinner v-if="isLoading" class="spinner" variant="info" label="Spinning"></b-spinner>
+    <b-card v-show="isLoaded" :title="recipe.title" tag="article" style="max-width: 20rem;" class="mb-2">
+      <b-card-text>
+        <router-link :to="{ name: 'recipe', params: { recipeId: recipe.id } }" class="recipe-preview">
+          <img :src=recipe.image @load="onImgLoad" class="recipe_image" />
+        </router-link>
+        <div class="recipe-overview">
+          <div>{{ recipe.readyInMinutes }} minutes</div>
+          <div>{{ recipe.popularity }} likes</div>
         </div>
-        <div v-else>
-          <img src="../assets/image-placeholder.png" class="recipe_image" />
+        <div class="icons">
+          <div v-if="recipe.vegan">
+            <img src="../assets/vegan-icon.jpg" class="icon" />
+          </div>
+          <div v-if="recipe.vegetarian && !recipe.vegan">
+            <img src="../assets/vegetarian-icon.png" class="icon" />
+          </div>
+          <div v-if="recipe.glutenFree">
+            <img src="../assets/gluten-free-icon.png" class="icon" />
+          </div>
         </div>
-      </router-link>
-      <div class="recipe-overview">
-        <div>{{ recipe.readyInMinutes }} minutes</div>
-        <div>{{ recipe.popularity }} likes</div>
-      </div>
-      <div class="icons">
-        <div v-if="recipe.vegan">
-          <img src="../assets/vegan-icon.jpg" class="icon" />
+        <div class="properties">
+          <img v-if="isWatched" src="../assets/eye-icon.png" class="icon" />
+          <b-button @click="onfavoriteButtonClick" :pressed="isFavorite" pill variant="outline-danger"><svg
+              xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill"
+              viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z" />
+            </svg></b-button>
         </div>
-        <div v-if="recipe.vegetarian && !recipe.vegan">
-          <img src="../assets/vegetarian-icon.png" class="icon" />
-        </div>
-        <div v-if="recipe.glutenFree">
-          <img src="../assets/gluten-free-icon.png" class="icon" />
-        </div>
-      </div>
-      <div class="properties">
-        <img v-if="isWatched" src="../assets/eye-icon.png" class="icon" />
-        <b-button @click="onfavoriteButtonClick" :pressed="isFavorite" pill variant="outline-danger"><svg
-            xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill"
-            viewBox="0 0 16 16">
-            <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z" />
-          </svg></b-button>
-      </div>
-    </b-card-text>
-  </b-card>
+      </b-card-text>
+    </b-card>
+  </div>
 </template>
 
 <script>
 import { apiGenericAddToUseresRecipes } from "../api_calls.js";
 export default {
+  beforeCreate() {
+    this.isLoading = true;
+    this.isLoaded = false;
+  },
   mounted() {
-    this.axios.get(this.recipe.image).then((i) => {
-      this.image_exists = true;
-      this.image_load = true;
-    }).catch((e) => {
-      this.image_exists = false;
-      this.image_load = true;
-    });
     this.isWatched = this.hasRecipeBeenWatched();
     this.isFavorite = this.hasRecipeBeenFavorited();
   },
   methods: {
+    onImgLoad() {
+      this.isLoaded = true
+      this.isLoading = false
+    },
     hasRecipeBeenWatched() {
       const watchedRecipes = this.$store.state.lastWatchedRecipes;
       for (let i = 0; i < watchedRecipes.length; i++) {
@@ -74,7 +73,6 @@ export default {
         this.$root.toast("AddToFavorites", "Recipe already in favorites", "fail");
         return;
       }
-      this.isFavorite = true;
       const response = await apiGenericAddToUseresRecipes("favorites", this.recipe.id);
       if (!response) {
         this.$root.toast("AddToFavorites", "Recipe added to last watched", "fail");
@@ -86,14 +84,15 @@ export default {
       }
       else if (response.status === 200) {
         this.$root.toast("AddToFavorites", "Recipe added to last watched", "success");
+        this.isFavorite = true;
         this.$store.dispatch("updateFavoriteRecipes");
       }
     }
   },
   data() {
     return {
-      image_load: false,
-      image_exists: false,
+      isLoading: true,
+      isLoaded: false,
       isWatched: false,
       isFavorite: false,
     };
@@ -127,6 +126,14 @@ export default {
   margin-top: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s;
+}
+
+.spinner {
+  width: 200px;
+  height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .recipe_image:hover {
