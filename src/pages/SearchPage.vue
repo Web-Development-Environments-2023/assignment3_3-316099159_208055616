@@ -25,8 +25,8 @@
         </b-form-group>
 
         <b-form-group id="input-group-searchLimit" label-cols-sm="3" label="Results Limit:" label-for="searchLimit">
-          <b-form-input id="searchLimit" v-model="$v.form.searchLimit.$model" :v-model="form.searchLimit"
-            :options="searchLimitOptions" :state="validateState('searchLimit')"></b-form-input>
+          <b-form-input id="searchLimit" v-model="$v.form.searchLimit.$model" :options="searchLimitOptions"
+            :state="validateState('searchLimit')"></b-form-input>
           <b-form-invalid-feedback v-if="!$v.form.searchLimit.required">
             searchLimit is required
           </b-form-invalid-feedback>
@@ -72,14 +72,14 @@ export default {
         cuisines: [],
         diets: [],
         intolerances: [],
-        searchLimit: this.$store.lastSearch,
+        searchLimit: "5",
         submitError: undefined
       },
       cuisines: [{ value: null, text: "", disabled: true }],
       diets: [{ value: null, text: "", disabled: true }],
       intolerances: [{ value: null, text: "", disabled: true }],
       resultRecipes: [],
-      lastSearch: this.$store.searchLimit
+      lastSearch: this.$store.state.lastSearch.lastSearch
     }
   },
   validations: {
@@ -123,7 +123,8 @@ export default {
       this.resultRecipes = [];
       this.$store.dispatch("updateLastSearch", this.form.searchQuery)
       this.lastSearch = this.form.searchQuery;
-      await apiSetSearchLimit(parseInt(this.form.searchLimit));
+      if (this.form.searchLimit !== this.$store.state.searchLimit)
+        await apiSetSearchLimit(parseInt(this.form.searchLimit));
       const { searchQuery, cuisines, diets, intolerances } = this.form;
       const response = await apiSearchRecipes(searchQuery, cuisines, diets, intolerances);
       if (!response) {
@@ -142,7 +143,7 @@ export default {
         cuisines: [],
         diets: [],
         intolerances: [],
-        searchLimit: this.$store.lastSearch,
+        searchLimit: 5,
       };
       this.$nextTick(() => {
         this.$v.$reset();
