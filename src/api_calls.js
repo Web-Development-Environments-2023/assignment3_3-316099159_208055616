@@ -15,9 +15,11 @@ export async function apiRegister(username, firstname, lastname, country, passwo
     },
     { withCredentials: true }
     );
+    console.log("apiRegister");
     console.log(response);
     return response;
   } catch (err) {
+    console.log("apiRegister");
     console.log(err);
     if (err.response) {
       return err.response;
@@ -36,9 +38,11 @@ export async function apiLogin(username, password) {
     },
     { withCredentials: true }
     );
+    console.log("apiLogin");
     console.log(response);
     return response;
   } catch (err) {
+    console.log("apiLogin");
     console.log(err);
     if (err.response) {
       return err.response;
@@ -54,9 +58,11 @@ export async function apiLogout() {
     {},
     { withCredentials: true }
     );
+    console.log("apiLogout");
     console.log(response);
     return response;
   } catch (err) {
+    console.log("apiLogout");
     console.log(err);
     if (err.response) {
       return err.response;
@@ -89,9 +95,11 @@ export async function apiGenericGetUsersRecipes(attribute) {
     url, 
     { withCredentials: true }
     );
+    console.log("apiGenericGetUsersRecipes " + attribute);
     console.log(response);
     return response;
   } catch (err) {
+    console.log("apiGenericGetUsersRecipes " + attribute);
     console.log(err);
     if (err.response) {
       return err.response;
@@ -122,9 +130,11 @@ export async function apiGenericAddToUseresRecipes(attribute, recipe_id) {
     { recipeId: recipe_id }, 
     { withCredentials: true }
     );
+    console.log("apiGenericAddToUsersRecipes " + attribute);
     console.log(response);
     return response;
   } catch (err) {
+    console.log("apiGenericAddToUsersRecipes " + attribute);
     console.log(err);
     if (err.response) {
       return err.response;
@@ -139,9 +149,11 @@ export async function apiGetSearchLimit() {
     server_domain + "/users/searchLimit", 
     { withCredentials: true }
     );
+    console.log("apiGetSearchLimit");
     console.log(response);
     return response;
   } catch (err) {
+    console.log("apiGetSearchLimit");
     console.log(err);
     if (err.response) {
       return err.response;
@@ -157,9 +169,11 @@ export async function apiSetSearchLimit(searchLimit) {
     { searchLimit: searchLimit }, 
     { withCredentials: true }
     );
+    console.log("apiSetSearchLimit");
     console.log(response);
     return response;
   } catch (err) {
+    console.log("apiSetSearchLimit");
     console.log(err);
     if (err.response) {
       return err.response;
@@ -170,7 +184,6 @@ export async function apiSetSearchLimit(searchLimit) {
 
 export async function apiCreateNewRecipe(title, image_url, readyInMinutes, vegetarian, vegan, glutenFree) {
   try {
-    console.log("apiCreateNewRecipe");
     const response = await axios.post(
       server_domain + `/recipes/`,
       { 
@@ -183,9 +196,11 @@ export async function apiCreateNewRecipe(title, image_url, readyInMinutes, veget
       },
       { withCredentials: true }
     );
+    console.log("apiCreateNewRecipe");
     console.log(response);
     return response;
   } catch (err) {
+    console.log("apiCreateNewRecipe");
     console.log(err);
     if (err.response) {
       return err.response;
@@ -201,9 +216,11 @@ export async function apiGetRecipeById(recipe_id) {
     { recipeId: recipe_id },
     { withCredentials: true }
     );
+    console.log("apiGetRecipeById");
     console.log(response);
     return response;
   } catch (err) {
+    console.log("apiGetRecipeById");
     console.log(err);
     if (err.response) {
       return err.response;
@@ -218,9 +235,11 @@ export async function apiGet3RandomRecipes() {
       server_domain + `/recipes/random`,
       { withCredentials: true }
     );
+    console.log("apiGet3RandomRecipes");
     console.log(response);
     return response;
   } catch (err) {
+    console.log("apiGet3RandomRecipes");
     console.log(err);
     if (err.response) {
       return err.response;
@@ -243,9 +262,11 @@ export async function apiSearchRecipes(searchQuery, cuisines, diets, intolerance
         } 
       },
     );
+    console.log("apiSearchRecipes");
     console.log(response);
     return response;
   } catch (err) {
+    console.log("apiSearchRecipes");
     console.log(err);
     if (err.response) {
       return err.response;

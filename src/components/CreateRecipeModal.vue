@@ -110,6 +110,7 @@ export default {
         this.$root.toast("createRecipe", response.data.message, "fail");
       } else if (response.status === 201) {
         this.$root.toast("createRecipe", "Recipe created sucessfully", "success");
+        this.$store.dispatch("updateMyRecipes");
       }
     },
     onReset() {
