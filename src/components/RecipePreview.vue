@@ -4,7 +4,7 @@
     <b-card v-show="isLoaded" :title="recipe.title" tag="article" style="max-width: 20rem;" class="mb-2">
       <b-card-text>
         <router-link :to="{ name: 'recipe', params: { recipeId: recipe.id } }" class="recipe-preview">
-          <img :src=recipe.image @load="onImgLoad" class="recipe_image" />
+          <img :src=recipe.image @load="onImgLoad" @error="setAltImg" class="recipe_image" />
         </router-link>
         <div class="recipe-overview">
           <div>{{ recipe.readyInMinutes }} minutes</div>
@@ -47,6 +47,11 @@ export default {
   },
   methods: {
     onImgLoad() {
+      this.isLoaded = true
+      this.isLoading = false
+    },
+    setAltImg(event) {
+      event.target.src = require("../assets/image-placeholder.png");
       this.isLoaded = true
       this.isLoading = false
     },

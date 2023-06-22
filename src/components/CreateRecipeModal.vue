@@ -38,9 +38,10 @@
       <b-form-group id="input-group-glutenFree" label-cols-sm="3" label="Gluten Free:" label-for="glutenFree">
         <b-form-checkbox id="glutenFree" v-model="$v.form.glutenFree.$model" name="check-button" switch />
       </b-form-group>
-
-      <b-button type="reset" variant="danger">Reset</b-button>
-      <b-button type="submit" variant="primary" style="width:250px;" class="ml-5 w-75">Search</b-button>
+      <div>
+        <b-button type="reset" variant="danger">Reset</b-button>
+        <b-button type="submit" variant="primary" style="width:350px; margin-left: 20px;">Create</b-button>
+      </div>
     </b-form>
     <b-alert class="mt-2" v-if="form.submitError" variant="warning" dismissible show>
       Search failed: {{ form.submitError }}
@@ -53,7 +54,7 @@ import { apiCreateNewRecipe } from "../api_calls.js";
 import { required, integer } from "vuelidate/lib/validators";
 
 export default {
-  name: "CreateRecipePage",
+  name: "CreateRecipeModal",
   data() {
     return {
       form: {
@@ -105,10 +106,10 @@ export default {
       const response = await apiCreateNewRecipe(title, image_url, readyInMinutes, vegetarian, vegan, glutenFree);
       if (!response) {
         this.form.submitError = "Server error";
-      } else if (response.status !== 200) {
-        this.form.submitError = response.data.message;
-      } else if (response.status === 200) {
-        this.resultRecipes.push(...response.data);
+      } else if (response.status !== 201) {
+        this.$root.toast("createRecipe", response.data.message, "fail");
+      } else if (response.status === 201) {
+        this.$root.toast("createRecipe", "Recipe created sucessfully", "success");
       }
     },
     onReset() {

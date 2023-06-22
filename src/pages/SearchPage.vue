@@ -25,8 +25,8 @@
         </b-form-group>
 
         <b-form-group id="input-group-searchLimit" label-cols-sm="3" label="Results Limit:" label-for="searchLimit">
-          <b-form-input id="searchLimit" v-model="$v.form.searchLimit.$model" :options="searchLimitOptions"
-            :state="validateState('searchLimit')">{{ form.searchLimit }}</b-form-input>
+          <b-form-input id="searchLimit" v-model="$v.form.searchLimit.$model" :v-model="form.searchLimit"
+            :options="searchLimitOptions" :state="validateState('searchLimit')"></b-form-input>
           <b-form-invalid-feedback v-if="!$v.form.searchLimit.required">
             searchLimit is required
           </b-form-invalid-feedback>

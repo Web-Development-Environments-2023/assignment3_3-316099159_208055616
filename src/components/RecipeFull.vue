@@ -4,7 +4,7 @@
     <div v-show="isLoaded">
       <div class="recipe-header mt-3 mb-4">
         <h1>{{ recipe.title }}</h1>
-        <img :src=recipe.image @load="onImgLoad" class="center" />
+        <img :src=recipe.image @load="onImgLoad" @error="setAltImg" class="center" />
       </div>
       <div class="recipe-body">
         <div class="wrapper">
@@ -68,6 +68,11 @@ export default {
   },
   methods: {
     onImgLoad() {
+      this.isLoaded = true
+      this.isLoading = false
+    },
+    setAltImg(event) {
+      event.target.src = require("../assets/image-placeholder.png");
       this.isLoaded = true
       this.isLoading = false
     },

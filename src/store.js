@@ -12,7 +12,7 @@ const store = new Vuex.Store({
     myRecipes: [],
     searchLimit: 5,
     randomRecipes: [],
-    lastSearch: ""
+    lastSearch: "",
   },
 
 

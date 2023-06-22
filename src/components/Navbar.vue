@@ -39,7 +39,7 @@
               <b-dropdown-item :to="{ name: 'familyRecipes' }">Family</b-dropdown-item>
             </b-nav-item-dropdown>
           </b-nav-item>
-          <b-nav-item :to="{ name: 'createRecipe' }" class="nav-link">
+          <b-nav-item id="toggle-btn" @click="toggleModal" class="nav-link">
             Create Recipe
           </b-nav-item>
           <b-nav-item @click="onLogout" class="nav-link">
@@ -48,14 +48,21 @@
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
+    <b-modal ref="my-modal" hide-footer title="Using Component Methods">
+      <CreateRecipeModal></CreateRecipeModal>
+    </b-modal>
   </div>
 </template>
 
 <script>
+import CreateRecipeModal from '../components/CreateRecipeModal.vue';
 import { mapState } from 'vuex';
 
 export default {
   name: "Navbar",
+  components: {
+    CreateRecipeModal,
+  },
   computed: {
     ...mapState({
       username: state => state.username,
@@ -66,6 +73,11 @@ export default {
       type: Function,
       required: true,
     },
+  },
+  methods: {
+    toggleModal() {
+      this.$refs['my-modal'].toggle('#toggle-btn')
+    }
   },
 };
 </script>

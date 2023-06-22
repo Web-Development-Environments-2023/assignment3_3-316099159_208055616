@@ -38,7 +38,12 @@ export default {
   },
   async mounted() {
     // getting the recipe from the server
-    const recipe_id = parseInt(this.$route.params.recipeId)
+    const pattern = new RegExp('^000\\d+$');
+    let recipe_id;
+    if (pattern.test(this.$route.params.recipeId))
+      recipe_id = this.$route.params.recipeId
+    else
+      recipe_id = parseInt(this.$route.params.recipeId)
     const response = await apiCalls.apiGetRecipeById(recipe_id)
     if (!response || response.status !== 200) {
       this.$router.replace("/NotFound");

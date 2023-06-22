@@ -7,7 +7,6 @@ import RecipeViewPage from "./pages/RecipeViewPage";
 import FamilyRecipesPage from "./pages/FamilyRecipesPage";
 import MyRecipesPage from "./pages/MyRecipesPage";
 import FavoriteRecipesPage from "./pages/FavoriteRecipesPage";
-import CreateRecipePage from "./pages/CreateRecipePage";
 import NotFound from "./pages/NotFoundPage";
 
 const routes = [
@@ -55,11 +54,6 @@ const routes = [
     path: "/familyRecipes",
     name: "familyRecipes",
     component: FamilyRecipesPage,
-  },
-  {
-    path: "/createRecipe",
-    name: "createRecipe",
-    component: CreateRecipePage,
   },
   {
     path: "*",
