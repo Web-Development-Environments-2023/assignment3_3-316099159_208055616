@@ -1,4 +1,4 @@
-const server_domain = "http://localhost:3000"
+const server_domain = "https://132.73.84.130"
 import axios from "axios";
 
 export async function apiRegister(username, firstname, lastname, country, password, email) {
