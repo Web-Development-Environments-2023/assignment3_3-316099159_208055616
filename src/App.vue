@@ -8,7 +8,6 @@
 </template>
 
 <script>
-import { apiCreateNewRecipe } from "./api_calls";
 import Navbar from "./components/Navbar.vue";
 export default {
   name: "App",

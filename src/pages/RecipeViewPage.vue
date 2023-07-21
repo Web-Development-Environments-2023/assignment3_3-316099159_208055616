@@ -49,18 +49,19 @@ export default {
       this.$router.replace("/NotFound");
       return
     }
-    const addResponse = await apiCalls.apiGenericAddToUseresRecipes("lastWatched", recipe_id);
-    if (!addResponse) {
-      this.$root.toast("AddToLastWatched", "Recipe added to last watched", "fail");
+    if (this.$store.state.username) {
+      const addResponse = await apiCalls.apiGenericAddToUseresRecipes("lastWatched", recipe_id);
+      if (!addResponse) {
+        this.$root.toast("AddToLastWatched", "Recipe added to last watched", "fail");
+      }
+      else if (addResponse.status !== 200) {
+        this.$root.toast("AddToLastWatched", addResponse.data.message, "fail");
+      }
+      else if (addResponse.status === 200) {
+        this.$root.toast("AddToLastWatched", "Recipe added to last watched", "success");
+        this.$store.dispatch("updateLastWatchedRecipes");
+      }
     }
-    else if (addResponse.status !== 200) {
-      this.$root.toast("AddToLastWatched", addResponse.data.message, "fail");
-    }
-    else if (addResponse.status === 200) {
-      this.$root.toast("AddToLastWatched", "Recipe added to last watched", "success");
-      this.$store.dispatch("updateLastWatchedRecipes");
-    }
-
 
     // mapping the response to the recipe object
     const {
